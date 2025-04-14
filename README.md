@@ -21,7 +21,7 @@ A simple and interactive **chat-based travel planning assistant** that helps use
 ```bash
 ├── index.html   # Main interface of the chatbot
 ├── README.md    # This file
-
+```
 ⚠️ Note: Gemini API key and related calls have been removed from index.html (line 101) to keep the code secure and safe from abuse.
 
 🔧 Technologies Used
