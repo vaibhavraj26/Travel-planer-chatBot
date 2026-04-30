@@ -1,280 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Travel Pro - AI Travel Planner</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- CSS Section -->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(to bottom right, #f0f9ff, #bae6fd);
-            min-height: 100vh;
-        }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .glow-card { box-shadow: 0 4px 20px -5px rgba(14, 165, 233, 0.15); transition: all 0.3s ease; }
-        .glow-card:hover { box-shadow: 0 8px 30px -5px rgba(14, 165, 233, 0.25); transform: translateY(-2px); }
-        .chat-bubble { position: relative; border-radius: 18px; padding: 15px; }
-        .chat-bubble::after { content: ''; position: absolute; bottom: 0; width: 0; height: 0; border: 10px solid transparent; }
-        .user-bubble::after { right: -10px; border-left-color: #0ea5e9; border-right: 0; border-bottom: 0; margin-bottom: 10px; }
-        .assistant-bubble::after { left: -10px; border-right-color: #e0f2fe; border-left: 0; border-bottom: 0; margin-bottom: 10px; }
-        .custom-scrollbar { max-height: 500px; overflow-y: auto; }
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(224, 242, 254, 0.5); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.5); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(2, 132, 199, 0.7); }
-        .section-title { font-weight: 600; color: #075985; margin: 1rem 0 0.5rem 0; display: flex; align-items: center; }
-        .prebuilt-btn { background: #fff; border: 1px solid #e0f2fe; padding: 10px; border-radius: 8px; transition: all 0.3s; }
-        .prebuilt-btn:hover { background: #e0f2fe; transform: translateY(-2px); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
-        .saved-chat-item { padding: 10px; border-bottom: 1px solid #e0f2fe; display: flex; justify-content: space-between; align-items: center; }
-        .saved-chat-item:hover { background: #f0f9ff; }
-    </style>
+    <meta name="description" content="Global Travel Pro — AI-powered travel planner. Get personalized itineraries, visa info, budget tips, and more.">
+    <meta name="keywords" content="travel planner, AI travel, trip planning, itinerary generator">
+    <title>Global Travel Pro — AI Travel Planner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="src/styles/base.css">
+    <link rel="stylesheet" href="src/styles/layout.css">
+    <link rel="stylesheet" href="src/styles/components.css">
+    <link rel="stylesheet" href="src/styles/modals.css">
+    <link rel="stylesheet" href="src/styles/responsive.css">
 </head>
-<body>
-    <div class="container">
-        <!-- HTML Section -->
-        <header class="text-center mb-8 bg-white rounded-2xl p-6 glow-card">
-            <div class="flex justify-center items-center mb-4">
-                <div class="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-full mr-4">
-                    <i class="fas fa-plane text-white text-2xl"></i>
-                </div>
-                <h1 class="text-3xl font-bold text-blue-800">Global Travel Pro</h1>
-            </div>
-            <p class="text-lg text-blue-600">Plan your perfect trip with AI assistance</p>
-        </header>
 
-        <div class="bg-white rounded-2xl shadow-lg glow-card mb-8">
-            <div class="p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white flex justify-between items-center">
-                <h2 class="text-lg font-semibold">Travel Planner Chat</h2>
-                <div>
-                    <button id="clear-chat" class="text-white hover:text-gray-200 mr-2"><i class="fas fa-trash"></i> Clear</button>
-                    <button id="save-chat" class="text-white hover:text-gray-200 mr-2"><i class="fas fa-save"></i> Save</button>
-                    <button id="view-saved-chats" class="text-white hover:text-gray-200"><i class="fas fa-history"></i> Saved Chats</button>
+<body>
+    <div class="app-layout">
+        <!-- ===== SIDEBAR COMPONENT ===== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><i class="fas fa-globe-americas"></i></div>
+                <div class="sidebar-brand">
+                    <h1>Global Travel Pro</h1>
+                    <span>AI Travel Planner</span>
                 </div>
             </div>
-            <div id="chat-container" class="custom-scrollbar p-4 bg-gradient-to-b from-blue-50 to-white"></div>
-            <div class="p-4 border-t border-blue-100">
-                <div class="flex gap-2">
-                    <input type="text" id="user-input" 
-                        class="flex-1 p-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-400" 
-                        placeholder="Ask me anything (e.g., 'Plan a 5-day trip to Japan')">
-                    <button id="send-message" class="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600">
-                        <i class="fas fa-paper-plane"></i> Send
+
+            <button class="btn-new-chat" id="btn-new-chat">
+                <i class="fas fa-plus"></i> New Conversation
+            </button>
+
+            <div class="sidebar-search">
+                <div class="sidebar-search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-conversations" placeholder="Search conversations...">
+                </div>
+            </div>
+
+            <nav class="conversation-list" id="conversation-list" aria-label="Conversation history">
+                <!-- Dynamically populated -->
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-settings" id="btn-settings">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <main class="main-content">
+            <!-- HEADER COMPONENT -->
+            <header class="main-header">
+                <div class="main-header-left">
+                    <button class="btn-sidebar-toggle" id="btn-sidebar-toggle" aria-label="Toggle sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="main-header-title" id="main-header-title">Welcome</h2>
+                </div>
+                <div class="main-header-right">
+                    <button class="header-btn" id="btn-trip-builder" title="Trip Builder">
+                        <i class="fas fa-compass"></i> <span class="hide-mobile">Trip Builder</span>
+                    </button>
+                    <button class="header-btn" id="btn-export" title="Export chat">
+                        <i class="fas fa-download"></i> <span class="hide-mobile">Export</span>
+                    </button>
+                    <button class="header-btn" id="btn-clear-chat" title="Clear chat">
+                        <i class="fas fa-broom"></i>
+                    </button>
+                    <div class="menu-wrapper">
+                        <button class="header-btn" id="btn-shortcuts" title="Keyboard shortcuts">
+                            <i class="fas fa-keyboard"></i>
+                        </button>
+                        <div class="shortcuts-menu" id="shortcuts-menu">
+                            <div class="menu-header">Keyboard Shortcuts</div>
+                            <div class="shortcut-item">
+                                <div class="shortcut-key"><kbd>Enter</kbd></div>
+                                <div class="shortcut-desc">Send message</div>
+                            </div>
+                            <div class="shortcut-item">
+                                <div class="shortcut-key"><kbd>Shift</kbd> + <kbd>Enter</kbd></div>
+                                <div class="shortcut-desc">New line</div>
+                            </div>
+                            <div class="shortcut-item">
+                                <div class="shortcut-key"><kbd>Ctrl</kbd> + <kbd>N</kbd></div>
+                                <div class="shortcut-desc">New chat</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CHAT AREA COMPONENT -->
+            <section class="chat-area" id="chat-area">
+                <!-- Welcome screen -->
+                <div class="welcome-screen" id="welcome-screen">
+                    <div class="welcome-icon"><i class="fas fa-plane"></i></div>
+                    <h2>Where to next?</h2>
+                    <p>Plan your perfect trip with AI-powered travel assistance. Get detailed itineraries, visa information, budget breakdowns, and local tips.</p>
+                    <div class="feature-cards">
+                        <div class="feature-card" data-prompt="Plan a 7-day cultural trip to Japan including Tokyo, Kyoto, and Osaka">
+                            <i class="fas fa-torii-gate"></i>
+                            <h4>Explore Japan</h4>
+                            <p>7-day cultural immersion across Tokyo, Kyoto & Osaka</p>
+                        </div>
+                        <div class="feature-card" data-prompt="Create a budget backpacking itinerary for Southeast Asia for 2 weeks">
+                            <i class="fas fa-mountain-sun"></i>
+                            <h4>Backpack Southeast Asia</h4>
+                            <p>2-week budget adventure through top destinations</p>
+                        </div>
+                        <div class="feature-card" data-prompt="Plan a romantic honeymoon trip to Santorini and Amalfi Coast for 10 days">
+                            <i class="fas fa-heart"></i>
+                            <h4>Romantic Europe</h4>
+                            <p>10-day honeymoon in Santorini & Amalfi Coast</p>
+                        </div>
+                        <div class="feature-card" data-prompt="What are the visa requirements and travel tips for visiting Dubai from India?">
+                            <i class="fas fa-passport"></i>
+                            <h4>Visa & Travel Info</h4>
+                            <p>Requirements, tips & essential travel documents</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages container -->
+                <div class="messages-container" id="messages-container" style="display:none;"></div>
+            </section>
+
+            <!-- TRIP BUILDER COMPONENT -->
+            <div class="trip-builder" id="trip-builder">
+                <h3><i class="fas fa-compass"></i> Trip Builder</h3>
+                <div class="trip-form">
+                    <div class="form-group">
+                        <label for="tb-destination">Destination</label>
+                        <input type="text" id="tb-destination" placeholder="e.g., Paris, France">
+                    </div>
+                    <div class="form-group">
+                        <label for="tb-duration">Duration (days)</label>
+                        <input type="number" id="tb-duration" placeholder="7" min="1" max="90">
+                    </div>
+                    <div class="form-group">
+                        <label for="tb-travelers">Travelers</label>
+                        <input type="number" id="tb-travelers" placeholder="2" min="1" max="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="tb-budget">Budget</label>
+                        <select id="tb-budget">
+                            <option value="">Select budget range</option>
+                            <option value="budget">Budget (< $50/day)</option>
+                            <option value="moderate">Moderate ($50-150/day)</option>
+                            <option value="luxury">Luxury (> $150/day)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tb-interests">Interests</label>
+                        <input type="text" id="tb-interests" placeholder="e.g., culture, adventure, beach">
+                    </div>
+                    <button class="btn-primary" id="btn-generate-itinerary">
+                        <i class="fas fa-magic"></i> Generate Itinerary
                     </button>
                 </div>
             </div>
-        </div>
 
-        <div class="bg-white rounded-2xl shadow-lg glow-card p-6">
-            <h3 class="text-lg font-semibold text-blue-800 mb-4"><i class="fas fa-question-circle mr-2"></i>Prebuilt Questions</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button class="prebuilt-btn" onclick="quickStart('Plan a 5-day trip to Japan from the US')">Plan a 5-day trip to Japan from the US</button>
-                <button class="prebuilt-btn" onclick="quickStart('Suggest a budget weekend getaway from India')">Suggest a budget weekend getaway from India</button>
-                <button class="prebuilt-btn" onclick="quickStart('What visa do I need for Italy from Canada?')">What visa do I need for Italy from Canada?</button>
-                <button class="prebuilt-btn" onclick="quickStart('Top cultural destinations in Europe')">Top cultural destinations in Europe</button>
-            </div>
-        </div>
-
-        <!-- Modal for Saved Chats -->
-        <div id="saved-chats-modal" class="modal">
-            <div class="modal-content">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-blue-800">Saved Chats</h3>
-                    <button id="close-modal" class="text-blue-600 hover:text-blue-800"><i class="fas fa-times"></i></button>
+            <!-- INPUT COMPONENT -->
+            <div class="input-area" id="input-area">
+                <div class="input-box">
+                    <textarea id="user-input" placeholder="Ask me anything about travel..." rows="1"></textarea>
+                    <div class="input-footer">
+                        <span class="char-count" id="char-count">0</span>
+                    </div>
                 </div>
-                <div id="saved-chats-list"></div>
+                <button class="btn-send" id="btn-send" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- ===== MODALS ===== -->
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="btn-close" data-close-modal="settings-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="form-group">
+                    <label for="settings-api-key">Gemini API Key</label>
+                    <input type="password" id="settings-api-key" placeholder="Enter your API key">
+                    <small>Get your key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" data-close-modal="settings-modal">Cancel</button>
+                <button class="btn-primary" id="btn-save-settings">Save Settings</button>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Section -->
-    <script>
-        // Configuration
-        const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-        const API_KEY = 'AIzaSyB0tWfjn-Ft5wmh6xIPT7LG9qu9M94a4FM';
-        const SYSTEM_PROMPT = `You are Global Travel Pro, an AI travel planner. Provide detailed, practical travel plans. Structure responses with:
-        Trip Overview: Destination, duration, summary
-        Itinerary: Day-by-day plan
-        Visa Requirements: Visa info if applicable
-        Travel Tips: Budget, tips, resources
-        Be concise, friendly, and accurate. Use headings and bullet points.`;
+    <!-- Rename Modal -->
+    <div class="modal-overlay" id="rename-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Rename Conversation</h3>
+                <button class="btn-close" data-close-modal="rename-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <input type="text" id="rename-input" placeholder="Enter new name" autofocus>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" data-close-modal="rename-modal">Cancel</button>
+                <button class="btn-primary" id="btn-save-rename">Rename</button>
+            </div>
+        </div>
+    </div>
 
-        // DOM Elements
-        const chatContainer = document.getElementById('chat-container');
-        const userInput = document.getElementById('user-input');
-        const sendMessageBtn = document.getElementById('send-message');
-        const clearChatBtn = document.getElementById('clear-chat');
-        const saveChatBtn = document.getElementById('save-chat');
-        const viewSavedChatsBtn = document.getElementById('view-saved-chats');
-        const savedChatsModal = document.getElementById('saved-chats-modal');
-        const savedChatsList = document.getElementById('saved-chats-list');
-        const closeModalBtn = document.getElementById('close-modal');
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
 
-        // Load initial chat
-        function loadChat() {
-            const savedChat = localStorage.getItem('travelChat_current');
-            if (savedChat) {
-                chatContainer.innerHTML = savedChat;
-            } else {
-                addMessage('Welcome! How can I help you plan your trip today?', 'assistant');
-            }
-        }
-
-        // Add message to chat
-        function addMessage(message, role) {
-            const div = document.createElement('div');
-            div.className = `flex justify-${role === 'user' ? 'end' : 'start'} mb-4`;
-            div.innerHTML = `
-                <div class="chat-bubble ${role === 'user' ? 'bg-blue-500 text-white user-bubble' : 'bg-blue-50 text-blue-700 assistant-bubble'}">
-                    <div class="flex items-center mb-2">
-                        <i class="fas ${role === 'user' ? 'fa-user' : 'fa-plane'} mr-2"></i>
-                        <strong>${role === 'user' ? 'You' : 'Travel Pro'}</strong>
-                    </div>
-                    <div>${role === 'assistant' ? formatResponse(message) : message}</div>
-                </div>
-            `;
-            chatContainer.appendChild(div);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        // Format AI response
-        function formatResponse(text) {
-            return text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>')
-                .replace(/Trip Overview:/gi, '<div class="section-title"><i class="fas fa-map mr-2"></i>Trip Overview</div>')
-                .replace(/Itinerary:/gi, '<div class="section-title"><i class="fas fa-calendar-alt mr-2"></i>Itinerary</div>')
-                .replace(/Visa Requirements:/gi, '<div class="section-title"><i class="fas fa-passport mr-2"></i>Visa Requirements</div>')
-                .replace(/Travel Tips:/gi, '<div class="section-title"><i class="fas fa-lightbulb mr-2"></i>Travel Tips</div>')
-                .replace(/- (.*?)(<br>|$)/g, '<li class="ml-5">$1</li>')
-                .replace(/<li/g, '<ul class="list-disc pl-5 space-y-1"><li')
-                .replace(/<\/li>/g, '</li></ul>');
-        }
-
-        // Send message to API
-        async function sendMessage() {
-            const message = userInput.value.trim();
-            if (!message) return;
-
-            addMessage(message, 'user');
-            userInput.value = '';
-
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'flex justify-start mb-4';
-            typingDiv.innerHTML = '<div class="chat-bubble bg-blue-50 text-blue-700 assistant-bubble"><i class="fas fa-ellipsis-h mr-2 animate-pulse"></i>Planning...</div>';
-            chatContainer.appendChild(typingDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            try {
-                const response = await fetch(`${API_URL}?key=${API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: `${SYSTEM_PROMPT}\n\n${message}` }] }]
-                    })
-                });
-
-                const data = await response.json();
-                chatContainer.removeChild(typingDiv);
-
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I couldn’t process that. Try again!';
-                addMessage(reply, 'assistant');
-            } catch (error) {
-                console.error('Error:', error);
-                chatContainer.removeChild(typingDiv);
-                addMessage('Error connecting to the travel planner. Please try again.', 'assistant');
-            }
-        }
-
-        // Clear chat
-        function clearChat() {
-            chatContainer.innerHTML = '';
-            addMessage('Chat cleared! How can I assist you now?', 'assistant');
-            localStorage.removeItem('travelChat_current');
-        }
-
-        // Save chat to local storage with a name
-        function saveChat() {
-            const chatName = prompt('Enter a name for this chat (e.g., "Japan Trip Plan"):');
-            if (!chatName) {
-                alert('Please provide a name to save the chat.');
-                return;
-            }
-
-            const timestamp = new Date().toISOString();
-            const chatData = { name: chatName, content: chatContainer.innerHTML, timestamp };
-            localStorage.setItem('travelChat_current', chatContainer.innerHTML); // Current chat
-            localStorage.setItem(`travelChat_${timestamp}`, JSON.stringify(chatData)); // Saved with timestamp
-            alert(`Chat saved as "${chatName}"!`);
-        }
-
-        // View saved chats with delete option
-        function viewSavedChats() {
-            savedChatsList.innerHTML = '';
-            const savedChats = Object.keys(localStorage)
-                .filter(key => key.startsWith('travelChat_') && key !== 'travelChat_current')
-                .map(key => ({ key, ...JSON.parse(localStorage.getItem(key)) }));
-
-            if (savedChats.length === 0) {
-                savedChatsList.innerHTML = '<p class="text-blue-600">No saved chats yet.</p>';
-            } else {
-                savedChats.forEach(chat => {
-                    const div = document.createElement('div');
-                    div.className = 'saved-chat-item';
-                    div.innerHTML = `
-                        <span>${chat.name} (${new Date(chat.timestamp).toLocaleDateString()})</span>
-                        <div>
-                            <button class="view-btn text-blue-600 hover:text-blue-800 mr-2" data-key="${chat.key}"><i class="fas fa-eye"></i></button>
-                            <button class="delete-btn text-red-600 hover:text-red-800" data-key="${chat.key}"><i class="fas fa-trash"></i></button>
-                        </div>
-                    `;
-                    savedChatsList.appendChild(div);
-
-                    // View chat
-                    div.querySelector('.view-btn').addEventListener('click', () => {
-                        chatContainer.innerHTML = chat.content;
-                        localStorage.setItem('travelChat_current', chat.content);
-                        savedChatsModal.style.display = 'none';
-                    });
-
-                    // Delete chat
-                    div.querySelector('.delete-btn').addEventListener('click', () => {
-                        if (confirm(`Are you sure you want to delete "${chat.name}"?`)) {
-                            localStorage.removeItem(chat.key);
-                            viewSavedChats(); // Refresh the list
-                        }
-                    });
-                });
-            }
-            savedChatsModal.style.display = 'flex';
-        }
-
-        // Quick start prebuilt questions
-        function quickStart(query) {
-            userInput.value = query;
-            sendMessage();
-        }
-
-        // Event Listeners
-        sendMessageBtn.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-        clearChatBtn.addEventListener('click', clearChat);
-        saveChatBtn.addEventListener('click', saveChat);
-        viewSavedChatsBtn.addEventListener('click', viewSavedChats);
-        closeModalBtn.addEventListener('click', () => savedChatsModal.style.display = 'none');
-        savedChatsModal.addEventListener('click', (e) => {
-            if (e.target === savedChatsModal) savedChatsModal.style.display = 'none';
-        });
-
-        // Initialize
-        loadChat();
-    </script>
+    <!-- JavaScript Module -->
+    <script type="module" src="src/app.js"></script>
 </body>
+
 </html>

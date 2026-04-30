@@ -1,0 +1,443 @@
+/* ===== Responsive Design ===== */
+
+/* Tablet (768px and below) */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        transition: transform var(--transition);
+        z-index: 101;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .btn-sidebar-toggle {
+        display: block;
+    }
+
+    .main-header-right {
+        gap: 4px;
+    }
+
+    .hide-mobile {
+        display: none;
+    }
+
+    .header-btn {
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .main-header {
+        padding: 0 16px;
+    }
+
+    .chat-area {
+        padding: 16px;
+    }
+
+    .input-area {
+        padding: 12px 16px 16px;
+    }
+
+    .input-wrapper {
+        max-width: 100%;
+    }
+
+    .modal {
+        width: 95%;
+        padding: 24px;
+    }
+
+    .welcome-screen {
+        padding: 30px 16px;
+    }
+
+    .welcome-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .welcome-screen h2 {
+        font-size: 22px;
+    }
+
+    .welcome-screen p {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .feature-cards {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+
+    .feature-card {
+        padding: 16px;
+    }
+
+    .message {
+        max-width: 100%;
+    }
+
+    .message-content {
+        max-width: 100%;
+        font-size: 13px;
+        padding: 12px 14px;
+    }
+
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+    }
+
+    .toast {
+        min-width: 280px;
+        padding: 14px 16px;
+    }
+
+    .scroll-to-bottom-btn {
+        width: 44px;
+        height: 44px;
+        bottom: 80px;
+        right: 16px;
+        font-size: 16px;
+    }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+    .main-header {
+        padding: 0 12px;
+        height: 56px;
+    }
+
+    .main-header-title {
+        font-size: 14px;
+    }
+
+    .main-header-right {
+        gap: 2px;
+    }
+
+    .header-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .chat-area {
+        padding: 12px;
+    }
+
+    .input-area {
+        padding: 8px 12px 12px;
+    }
+
+    .input-wrapper {
+        gap: 8px;
+    }
+
+    .input-box textarea {
+        padding: 10px 44px 10px 12px;
+        font-size: 13px;
+        min-height: 44px;
+    }
+
+    .char-count {
+        right: 10px;
+        bottom: 8px;
+        font-size: 10px;
+    }
+
+    .btn-send {
+        width: 44px;
+        height: 44px;
+        font-size: 14px;
+    }
+
+    .welcome-screen {
+        padding: 20px 12px;
+    }
+
+    .welcome-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .welcome-screen h2 {
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+
+    .welcome-screen p {
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+
+    .feature-cards {
+        gap: 12px;
+    }
+
+    .feature-card {
+        padding: 12px;
+    }
+
+    .feature-card i {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    .feature-card h4 {
+        font-size: 12px;
+        margin-bottom: 2px;
+    }
+
+    .feature-card p {
+        font-size: 11px;
+    }
+
+    .message {
+        gap: 8px;
+    }
+
+    .message-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+
+    .message-content {
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .message-time {
+        font-size: 10px;
+    }
+
+    .modal {
+        width: 96%;
+        padding: 20px;
+        border-radius: var(--radius-lg);
+    }
+
+    .modal-header {
+        margin-bottom: 16px;
+    }
+
+    .modal-header h3 {
+        font-size: 16px;
+    }
+
+    .modal-close {
+        width: 28px;
+        height: 28px;
+    }
+
+    .modal-actions {
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .toast-container {
+        top: 8px;
+        right: 8px;
+        gap: 6px;
+        width: calc(100% - 16px);
+    }
+
+    .toast {
+        min-width: auto;
+        width: 100%;
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+
+    .shortcuts-menu {
+        width: calc(100vw - 24px);
+        max-height: 50vh;
+    }
+
+    .trip-builder {
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+
+    .trip-builder h3 {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .trip-form {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .trip-form-actions {
+        flex-direction: column;
+    }
+
+    .btn-generate-trip,
+    .btn-cancel-trip {
+        width: 100%;
+        padding: 12px 16px;
+    }
+
+    .form-group label {
+        font-size: 11px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .sidebar {
+        width: 80%;
+        max-width: 280px;
+    }
+
+    .btn-new-chat {
+        margin: 12px 16px;
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .conversation-list {
+        padding: 8px 6px;
+    }
+
+    .conv-item {
+        padding: 10px;
+    }
+
+    .conv-item-name {
+        font-size: 12px;
+    }
+
+    .conv-item-date {
+        font-size: 10px;
+    }
+
+    .sidebar-search {
+        padding: 0 16px 10px;
+    }
+
+    .sidebar-search input {
+        padding: 8px 12px 8px 32px;
+        font-size: 12px;
+    }
+
+    .sidebar-footer {
+        padding: 12px 16px;
+    }
+
+    .btn-settings {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
+
+/* Landscape mode */
+@media (max-height: 600px) and (orientation: landscape) {
+    .welcome-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .welcome-screen h2 {
+        font-size: 18px;
+    }
+
+    .welcome-screen p {
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    .feature-card {
+        padding: 12px;
+    }
+
+    .feature-card i {
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+
+    .feature-card h4 {
+        font-size: 12px;
+    }
+
+    .feature-card p {
+        font-size: 11px;
+    }
+
+    .main-header {
+        height: 50px;
+    }
+
+    .input-area {
+        padding: 8px 16px 12px;
+    }
+
+    .input-box textarea {
+        max-height: 100px;
+    }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Print styles */
+@media print {
+    .sidebar,
+    .main-header,
+    .input-area,
+    .btn-send,
+    .modal-overlay,
+    .toast-container {
+        display: none !important;
+    }
+
+    .chat-area {
+        padding: 0;
+    }
+
+    .message {
+        break-inside: avoid;
+    }
+}

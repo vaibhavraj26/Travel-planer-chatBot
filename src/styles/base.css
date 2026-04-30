@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ===== CSS Variables / Design Tokens ===== */
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-glass: rgba(30, 41, 59, 0.7);
+    --bg-glass-light: rgba(51, 65, 85, 0.5);
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #818cf8;
+    --accent-hover: #a5b4fc;
+    --accent-glow: rgba(129, 140, 248, 0.3);
+    --accent-gradient: linear-gradient(135deg, #818cf8, #a78bfa, #c084fc);
+    --border: rgba(148, 163, 184, 0.12);
+    --border-accent: rgba(129, 140, 248, 0.3);
+    --user-bubble: linear-gradient(135deg, #6366f1, #8b5cf6);
+    --assistant-bubble: rgba(51, 65, 85, 0.6);
+    --success: #34d399;
+    --warning: #fbbf24;
+    --error: #f87171;
+    --shadow-lg: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --sidebar-width: 300px;
+    --header-height: 60px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+html { 
+    scroll-behavior: smooth; 
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+    line-height: 1.6;
+}
+
+a { 
+    color: var(--accent); 
+    text-decoration: none; 
+}
+
+button { 
+    cursor: pointer; 
+    font-family: inherit; 
+    border: none; 
+    background: none; 
+    color: inherit; 
+}
+
+input, textarea { 
+    font-family: inherit; 
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes scaleIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.95); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+}
+
+@keyframes slideInRight {
+    from { 
+        opacity: 0; 
+        transform: translateX(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateX(0); 
+    }
+}
