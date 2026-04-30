@@ -33,8 +33,6 @@ export class ChatComponent {
         }
 
         this.uiUtils.scrollToBottom(container);
-        // Check if scroll button should be shown
-        setTimeout(() => this.checkScrollPosition(), 100);
     }
 
     formatContent(content) {
@@ -80,65 +78,14 @@ export class ChatComponent {
         const messages = this.uiUtils.getElement('messages-container');
         if (welcome) welcome.style.display = 'flex';
         if (messages) messages.style.display = 'none';
-        this.hideScrollButton();
     }
 
-    setupScrollButton() {
-        const container = this.uiUtils.getElement('chat-area');
-        if (!container) return;
 
-        // Create scroll button if it doesn't exist
-        let scrollBtn = this.uiUtils.getElement('scroll-to-bottom-btn');
-        if (!scrollBtn) {
-            scrollBtn = document.createElement('button');
-            scrollBtn.id = 'scroll-to-bottom-btn';
-            scrollBtn.className = 'scroll-to-bottom-btn';
-            scrollBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
-            scrollBtn.title = 'Scroll to bottom';
-            scrollBtn.addEventListener('click', () => {
-                this.uiUtils.scrollToBottom(this.uiUtils.getElement('messages-container'));
-                this.hideScrollButton();
-            });
-            document.body.appendChild(scrollBtn);
-        }
-
-        // Setup scroll listener
-        const messagesContainer = this.uiUtils.getElement('messages-container');
-        if (messagesContainer) {
-            messagesContainer.addEventListener('scroll', () => {
-                this.checkScrollPosition();
-            });
-        }
-    }
-
-    checkScrollPosition() {
-        const messages = this.uiUtils.getElement('messages-container');
-        if (!messages) return;
-
-        const isNearBottom = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 100;
-        if (isNearBottom) {
-            this.hideScrollButton();
-        } else {
-            this.showScrollButton();
-        }
-    }
-
-    showScrollButton() {
-        const btn = this.uiUtils.getElement('scroll-to-bottom-btn');
-        if (btn) btn.classList.add('visible');
-    }
-
-    hideScrollButton() {
-        const btn = this.uiUtils.getElement('scroll-to-bottom-btn');
-        if (btn) btn.classList.remove('visible');
-    }
 
     hideWelcomeScreen() {
         const welcome = this.uiUtils.getElement('welcome-screen');
         const messages = this.uiUtils.getElement('messages-container');
         if (welcome) welcome.style.display = 'none';
         if (messages) messages.style.display = 'flex';
-        // Show scroll button immediately as a hint that there's content to scroll through
-        this.showScrollButton();
     }
 }

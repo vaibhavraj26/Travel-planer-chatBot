@@ -86,8 +86,7 @@ class TravelPlannerApp {
         const title = this.uiUtils.getElement('main-header-title');
         if (title) title.textContent = conv?.name || 'Welcome';
         
-        // Setup scroll button
-        this.chatComponent.setupScrollButton();
+
     }
 
     loadConversation(id) {
@@ -105,7 +104,7 @@ class TravelPlannerApp {
             // Load and render messages
             this.chatComponent.hideWelcomeScreen();
             this.chatComponent.clearMessages();
-            this.chatComponent.setupScrollButton();
+
 
             const messages = this.state.getMessages(id);
             messages.forEach(msg => {
@@ -206,6 +205,104 @@ class TravelPlannerApp {
             btnTripBuilder.addEventListener('click', () => {
                 const tripBuilder = this.uiUtils.getElement('trip-builder');
                 tripBuilder?.classList.toggle('active');
+            });
+        }
+
+        const btnGetLocation = this.uiUtils.getElement('btn-get-location');
+        if (btnGetLocation) {
+            btnGetLocation.addEventListener('click', async (e) => {
+                e.preventDefault();
+                if (!navigator.geolocation) {
+                    this.uiUtils.showToast('Geolocation is not supported by your browser', 'error');
+                    return;
+                }
+
+                const icon = btnGetLocation.querySelector('i');
+                const originalClass = icon.className;
+                icon.className = 'fas fa-spinner fa-spin';
+                btnGetLocation.disabled = true;
+
+                try {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 });
+                    });
+
+                    const { latitude, longitude } = position.coords;
+                    
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                    if (!response.ok) throw new Error('Failed to fetch location data');
+                    
+                    const data = await response.json();
+                    
+                    const city = data.address.city || data.address.town || data.address.village || data.address.county || '';
+                    const state = data.address.state || '';
+                    const country = data.address.country || '';
+                    
+                    const locationString = [city, state, country].filter(Boolean).join(', ');
+                    
+                    if (locationString) {
+                        const inputFrom = this.uiUtils.getElement('tb-origin');
+                        if (inputFrom) inputFrom.value = locationString;
+                        this.uiUtils.showToast('Location updated', 'success');
+                    } else {
+                        throw new Error('Location details not found');
+                    }
+                } catch (error) {
+                    if (error.code === 1) {
+                        this.uiUtils.showToast('Location access denied', 'error');
+                    } else {
+                        this.uiUtils.showToast('Could not fetch location', 'error');
+                    }
+                } finally {
+                    icon.className = originalClass;
+                    btnGetLocation.disabled = false;
+                }
+            });
+        }
+
+        const btnGenerateItinerary = this.uiUtils.getElement('btn-generate-itinerary');
+        if (btnGenerateItinerary) {
+            btnGenerateItinerary.addEventListener('click', () => {
+                const origin = this.uiUtils.getElement('tb-origin')?.value.trim();
+                const destination = this.uiUtils.getElement('tb-destination')?.value.trim();
+                const duration = this.uiUtils.getElement('tb-duration')?.value.trim();
+                const travelers = this.uiUtils.getElement('tb-travelers')?.value.trim();
+                const food = this.uiUtils.getElement('tb-food')?.value;
+                const travelMode = this.uiUtils.getElement('tb-travel-mode')?.value;
+                const accommodation = this.uiUtils.getElement('tb-accommodation')?.value;
+                const experience = this.uiUtils.getElement('tb-experience')?.value;
+
+                if (!destination) {
+                    this.uiUtils.showToast('Please enter a destination', 'error');
+                    return;
+                }
+
+                let intro = `Plan a detailed trip to ${destination}`;
+                if (duration) intro += ` for ${duration} days`;
+                if (origin) intro += ` starting from ${origin}`;
+                if (travelers) intro += ` for ${travelers} travelers`;
+                
+                const promptParts = [intro + '.'];
+
+                if (travelMode) promptParts.push(`Preferred travel mode: ${travelMode}.`);
+                if (accommodation) promptParts.push(`Accommodation preference: ${accommodation}.`);
+                if (food) promptParts.push(`Food preference: ${food}.`);
+                if (experience) promptParts.push(`Main interest: ${experience}.`);
+                
+                promptParts.push('Please provide a day-by-day itinerary, budget breakdown, and local tips.');
+
+                const finalPrompt = promptParts.join('\n');
+
+                // Close modal
+                this.uiUtils.getElement('trip-builder')?.classList.remove('active');
+
+                // Set input and send
+                const input = this.uiUtils.getElement('user-input');
+                if (input) {
+                    input.value = finalPrompt;
+                    this.uiUtils.getElement('btn-send').disabled = false;
+                    this.inputComponent.sendMessage();
+                }
             });
         }
 

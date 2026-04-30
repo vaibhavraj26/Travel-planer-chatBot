@@ -99,7 +99,6 @@
             <section class="chat-area" id="chat-area">
                 <!-- Welcome screen -->
                 <div class="welcome-screen" id="welcome-screen">
-                    <div class="welcome-icon"><i class="fas fa-plane"></i></div>
                     <h2>Where to next?</h2>
                     <p>Plan your perfect trip with AI-powered travel assistance. Get detailed itineraries, visa information, budget breakdowns, and local tips.</p>
                     <div class="feature-cards">
@@ -123,6 +122,16 @@
                             <h4>Visa & Travel Info</h4>
                             <p>Requirements, tips & essential travel documents</p>
                         </div>
+                        <div class="feature-card" data-prompt="Plan a 5-day wildlife safari trip in Kenya, including Maasai Mara">
+                            <i class="fas fa-paw"></i>
+                            <h4>African Safari</h4>
+                            <p>5-day wildlife adventure in Kenya's Maasai Mara</p>
+                        </div>
+                        <div class="feature-card" data-prompt="Create a 4-day itinerary for a first-time visitor to New York City, focusing on top landmarks and food">
+                            <i class="fas fa-city"></i>
+                            <h4>New York City Break</h4>
+                            <p>4-day itinerary for landmarks and local food</p>
+                        </div>
                     </div>
                 </div>
 
@@ -132,11 +141,25 @@
 
             <!-- TRIP BUILDER COMPONENT -->
             <div class="trip-builder" id="trip-builder">
-                <h3><i class="fas fa-compass"></i> Trip Builder</h3>
+                <div class="trip-builder-header">
+                    <h3><i class="fas fa-compass"></i> Trip Builder</h3>
+                    <button class="btn-close-trip" onclick="document.getElementById('trip-builder').classList.remove('active')" title="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
                 <div class="trip-form">
                     <div class="form-group">
+                        <label for="tb-origin">Origin</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="tb-origin" placeholder="Enter your city">
+                            <button class="btn-icon-inside" id="btn-get-location" title="Get current location">
+                                <i class="fas fa-location-crosshairs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="tb-destination">Destination</label>
-                        <input type="text" id="tb-destination" placeholder="e.g., Paris, France">
+                        <input type="text" id="tb-destination" placeholder="Where do you want to go?">
                     </div>
                     <div class="form-group">
                         <label for="tb-duration">Duration (days)</label>
@@ -147,19 +170,46 @@
                         <input type="number" id="tb-travelers" placeholder="2" min="1" max="20">
                     </div>
                     <div class="form-group">
-                        <label for="tb-budget">Budget</label>
-                        <select id="tb-budget">
-                            <option value="">Select budget range</option>
-                            <option value="budget">Budget (< $50/day)</option>
-                            <option value="moderate">Moderate ($50-150/day)</option>
-                            <option value="luxury">Luxury (> $150/day)</option>
+                        <label for="tb-food">Food Preference</label>
+                        <select id="tb-food">
+                            <option value="">No preference</option>
+                            <option value="veg">Veg</option>
+                            <option value="non-veg">Non-veg</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="tb-interests">Interests</label>
-                        <input type="text" id="tb-interests" placeholder="e.g., culture, adventure, beach">
+                        <label for="tb-travel-mode">Travel Mode</label>
+                        <select id="tb-travel-mode">
+                            <option value="">No preference</option>
+                            <option value="flight">Flight</option>
+                            <option value="train">Train</option>
+                            <option value="road-trip">Road trip</option>
+                        </select>
                     </div>
-                    <button class="btn-primary" id="btn-generate-itinerary">
+                    <div class="form-group">
+                        <label for="tb-accommodation">Stay Preference</label>
+                        <select id="tb-accommodation">
+                            <option value="">Select accommodation</option>
+                            <option value="budget">Budget hotel</option>
+                            <option value="mid-range">Mid-range hotel</option>
+                            <option value="luxury">Luxury hotel</option>
+                            <option value="airbnb">Airbnb / Homestay</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tb-experience">Experience</label>
+                        <select id="tb-experience">
+                            <option value="">Select experience</option>
+                            <option value="culture">Culture & History</option>
+                            <option value="adventure">Adventure</option>
+                            <option value="nature">Nature</option>
+                            <option value="food">Food</option>
+                            <option value="nightlife">Nightlife</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="spiritual">Spiritual</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" id="btn-generate-itinerary" style="grid-column: 1 / -1; margin-top: 12px; padding: 12px; font-size: 15px;">
                         <i class="fas fa-magic"></i> Generate Itinerary
                     </button>
                 </div>
@@ -167,15 +217,17 @@
 
             <!-- INPUT COMPONENT -->
             <div class="input-area" id="input-area">
-                <div class="input-box">
-                    <textarea id="user-input" placeholder="Ask me anything about travel..." rows="1"></textarea>
-                    <div class="input-footer">
-                        <span class="char-count" id="char-count">0</span>
+                <div class="input-wrapper">
+                    <div class="input-box">
+                        <textarea id="user-input" placeholder="Ask me anything about travel..." rows="1"></textarea>
+                        <div class="input-footer">
+                            <span class="char-count" id="char-count">0</span>
+                        </div>
                     </div>
+                    <button class="btn-send" id="btn-send" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
                 </div>
-                <button class="btn-send" id="btn-send" disabled>
-                    <i class="fas fa-paper-plane"></i>
-                </button>
             </div>
         </main>
     </div>
@@ -198,7 +250,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-secondary" data-close-modal="settings-modal">Cancel</button>
+                <button class="btn-ghost" data-close-modal="settings-modal">Cancel</button>
                 <button class="btn-primary" id="btn-save-settings">Save Settings</button>
             </div>
         </div>
@@ -217,7 +269,7 @@
                 <input type="text" id="rename-input" placeholder="Enter new name" autofocus>
             </div>
             <div class="modal-footer">
-                <button class="btn-secondary" data-close-modal="rename-modal">Cancel</button>
+                <button class="btn-ghost" data-close-modal="rename-modal">Cancel</button>
                 <button class="btn-primary" id="btn-save-rename">Rename</button>
             </div>
         </div>

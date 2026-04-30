@@ -254,6 +254,8 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     flex-shrink: 0;
+    position: relative;
+    z-index: 50;
 }
 
 .main-header-left {
@@ -310,6 +312,7 @@
     padding: 24px;
     display: flex;
     flex-direction: column;
+    min-height: 0;
 }
 
 .chat-area::-webkit-scrollbar { 
